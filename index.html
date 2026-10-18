@@ -4,37 +4,31 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>universe-fx demo</title>
-<link rel="stylesheet" href="fx.css?v=6">
+<link rel="stylesheet" href="fx.css?v=8">
 <style>
   * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
   body { margin: 0; background: var(--fx-bg); color: var(--fx-text); font: 16px/1.6 system-ui, sans-serif; }
   nav { display: flex; gap: 28px; padding: 18px 32px; border-bottom: 1px solid #2d2640; font: 14px var(--fx-mono); }
   nav a { color: var(--fx-text); text-decoration: none; }
   nav a:hover { color: var(--fx-accent); }
-  .hero { padding: 40px 32px 24px; }
-  .hero h1 { margin: 0; }
+  .hero { display: grid; grid-template-columns: 1fr 1fr; min-height: 78vh; border-bottom: 1px solid #2d2640; }
+  .hero-text { padding: 48px 32px; }
   h1 { font: 700 clamp(40px, 7vw, 84px)/1 system-ui; margin: 0 0 16px; letter-spacing: -0.03em; }
   p.mono { font-family: var(--fx-mono); color: var(--fx-muted); }
-  section { padding: 48px 32px; max-width: 900px; }
-
-  .stage-wrap { border-top: 1px solid #2d2640; border-bottom: 1px solid #2d2640; }
-  .stage { position: relative; aspect-ratio: 960 / 420; overflow: hidden; background-color: #181422;
-    background-image: linear-gradient(#251f36 1px, transparent 1px), linear-gradient(90deg, #251f36 1px, transparent 1px);
-    background-size: 20px 20px; }
-  .stage::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(90deg, rgba(24,20,34,0) 0%, rgba(24,20,34,0) 55%, rgba(24,20,34,0.55) 100%); }
-  .stage.playing::after { display: none; }
-  #peek { position: absolute; right: 5%; bottom: 0; width: min(34%, 300px); aspect-ratio: 300 / 230; z-index: 1; }
-  #game { position: absolute; inset: 0; width: 100%; height: 100%; display: none; image-rendering: pixelated; z-index: 2; }
-  .stage.playing #game { display: block; }
-  .stage.playing #peek { display: none; }
-  .touch { position: absolute; left: 0; right: 0; bottom: 8px; display: none; justify-content: space-between; padding: 0 12px; z-index: 3; }
-  .touch button { width: 56px; height: 56px; font-size: 22px; }
-  @media (pointer: coarse) { .stage.playing .touch { display: flex; } }
-  .bar { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 18px 32px; }
-  .typed { font: 15px var(--fx-mono); color: var(--fx-text); min-height: 1.6em; }
-  .btn { font: 15px system-ui; color: var(--fx-text); background: #241d38; border: 1px solid #3a3057; border-radius: 6px; padding: 10px 22px; cursor: pointer; }
+  .hero-stage { display: flex; flex-direction: column; height: 100%; }
+  .hero-stage canvas { flex: 1; min-height: 0; }
+  .bar { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px 24px; background: #14101e; border-top: 1px solid #2d2640; }
+  .typed { font: 15px var(--fx-mono); min-height: 1.6em; }
+  .btn { font: 15px system-ui; color: var(--fx-text); background: #241d38; border: 1px solid #3a3057; border-radius: 6px; padding: 10px 22px; cursor: pointer; text-decoration: none; white-space: nowrap; }
   .btn:hover { border-color: var(--fx-accent); color: var(--fx-accent); }
-  .touch .btn { padding: 0; }
+  .game-sec { padding: 72px 32px 48px; max-width: 1040px; margin: 0 auto; scroll-margin-top: 0; }
+  .game-sec h2 { font: 700 clamp(28px, 4vw, 44px)/1.1 system-ui; margin: 0 0 8px; letter-spacing: -0.02em; }
+  .game-frame { position: relative; border: 1px solid #2d2640; border-radius: 10px; overflow: hidden; margin-top: 20px; aspect-ratio: 960 / 420; background: #0e1330; }
+  #game { display: block; width: 100%; height: 100%; touch-action: none; image-rendering: pixelated; }
+  .game-bar { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 12px 0; flex-wrap: wrap; }
+  section.more { padding: 24px 32px 64px; max-width: 900px; margin: 0 auto; }
+  @media (max-width: 760px) { .hero { grid-template-columns: 1fr; } .hero-stage { height: 420px; } }
 </style>
 </head>
 <body>
@@ -45,44 +39,49 @@
   <a href="#"><span data-unscramble>about/</span></a>
 </nav>
 <div class="hero">
-  <p class="mono">community project / built with GitHub Copilot</p>
-  <h1>stay-curious/</h1>
-</div>
-<div class="stage-wrap">
-  <div class="stage" id="stage" data-fx-no-trail>
-    <canvas id="peek" aria-label="Friendly octopus peeking in" data-fx-no-trail></canvas>
-    <canvas id="game" aria-label="Octopus platformer game"></canvas>
-    <div class="touch" aria-hidden="true">
-      <div><button class="btn" data-ctl="left">&#9664;</button> <button class="btn" data-ctl="right">&#9654;</button></div>
-      <button class="btn" data-ctl="jump">&#9650;</button>
-    </div>
+  <div class="hero-text">
+    <p class="mono">community project / built with GitHub Copilot</p>
+    <h1>Move your mouse.</h1>
+    <p>Coloured glyphs snap to a 20px grid behind your cursor, nav labels decode when you leave them, and the octopus follows you around.</p>
   </div>
-  <div class="bar">
-    <div class="typed" id="typed"></div>
-    <button class="btn" id="play">Play</button>
+  <div class="hero-stage">
+    <canvas class="fx-mascot" id="peek" aria-label="Friendly octopus" data-fx-no-trail></canvas>
+    <p class="mono" style="text-align:center;margin:8px 0 16px"><a class="btn" href="#game-section">Play Shark Dodge &#8595;</a></p>
   </div>
 </div>
-<section>
+
+<div class="game-sec" id="game-section">
+  <p class="typed" id="typed"></p>
+  <h2>Shark Dodge</h2>
+  <p>Swim with the arrow keys or WASD (or drag on touch screens). Dodge the sharks, grab pearls, and keep your three hearts.</p>
+  <div class="game-frame"><canvas id="game" aria-label="Shark dodge game, an octopus swimming away from sharks"></canvas></div>
+  <div class="game-bar">
+    <span class="mono">arrows / WASD to swim &middot; Esc to pause</span>
+    <button class="btn" id="play">Start game</button>
+  </div>
+</div>
+
+<section class="more">
   <h2>Section content</h2>
   <p>The trail renders over empty space only, so text stays easy to select. Add <code>data-fx-no-trail</code> to any element to suppress it there.</p>
 </section>
-<script src="fx.js?v=6"></script>
-<script src="game.js?v=6"></script>
+
+<script src="fx.js?v=8"></script>
+<script src="game.js?v=8"></script>
 <script>
   UniverseFX.cursorTrail();
   UniverseFX.unscramble("[data-unscramble]");
   UniverseFX.typewriter(document.getElementById("typed"), "play_octopus_while_you_wait/");
-  UniverseFX.mascot(document.getElementById("peek"), { accent: "#ae85ff", type: "octopus", peek: true, grid: false });
+  UniverseFX.mascot(document.getElementById("peek"), { accent: "#ae85ff", type: "octopus" });
 
-  var stage = document.getElementById("stage"), play = document.getElementById("play");
+  var play = document.getElementById("play"), running = false;
   var g = UniverseFX.game({
     canvas: document.getElementById("game"),
-    touch: stage.querySelector(".touch"),
-    onExit: function () { stage.classList.remove("playing"); play.textContent = "Play"; }
+    onExit: function () { running = false; play.textContent = "Resume game"; }
   });
   play.addEventListener("click", function () {
-    if (stage.classList.contains("playing")) { g.stop(); stage.classList.remove("playing"); play.textContent = "Play"; }
-    else { stage.classList.add("playing"); play.textContent = "Exit game"; play.blur(); g.start(); }
+    if (running) { g.stop(); running = false; play.textContent = "Resume game"; }
+    else { g.start(); running = true; play.textContent = "Pause"; play.blur(); }
   });
 </script>
 </body>
