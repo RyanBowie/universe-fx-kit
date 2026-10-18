@@ -423,5 +423,23 @@
     new IntersectionObserver(function (e, obs) { if (e[0].isIntersecting) { obs.disconnect(); setTimeout(tick, o.delay || 300); } }).observe(el);
   }
 
-  global.UniverseFX = { cursorTrail: cursorTrail, unscramble: unscramble, mascot: mascot, typewriter: typewriter };
+  /* 5. Scroll reveal: elements rise and fade in with a left-to-right stagger as they enter view. */
+  function reveal(selector, o) {
+    o = o || {};
+    var els = [].slice.call(document.querySelectorAll(selector));
+    els.forEach(function (el) { el.classList.add("fx-reveal"); });
+    if (reduce || !window.IntersectionObserver) { els.forEach(function (el) { el.classList.add("fx-in"); }); return; }
+    var obs = new IntersectionObserver(function (entries) {
+      entries.filter(function (e) { return e.isIntersecting; })
+        .sort(function (a, b) { return a.boundingClientRect.top - b.boundingClientRect.top || a.boundingClientRect.left - b.boundingClientRect.left; })
+        .forEach(function (e, i) {
+          e.target.style.transitionDelay = (i * (o.stagger || 90)) + "ms";
+          e.target.classList.add("fx-in");
+          obs.unobserve(e.target);
+        });
+    }, { threshold: o.threshold || 0.15 });
+    els.forEach(function (el) { obs.observe(el); });
+  }
+
+  global.UniverseFX = { cursorTrail: cursorTrail, unscramble: unscramble, mascot: mascot, typewriter: typewriter, reveal: reveal };
 })(window);

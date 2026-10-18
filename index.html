@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>universe-fx demo</title>
-<link rel="stylesheet" href="fx.css?v=9">
+<link rel="stylesheet" href="fx.css?v=10">
 <style>
   * { box-sizing: border-box; }
   html { scroll-behavior: smooth; }
@@ -28,6 +28,14 @@
   #game { display: block; width: 100%; height: 100%; touch-action: none; image-rendering: pixelated; }
   .game-bar { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 12px 0; flex-wrap: wrap; }
   section.more { padding: 24px 32px 64px; max-width: 900px; margin: 0 auto; }
+  .feat { border-top: 1px solid #2d2640; margin-top: 48px; }
+  .feat h2 { font: 700 clamp(36px, 6vw, 72px)/1 system-ui; letter-spacing: -0.03em; margin: 0; padding: 40px 32px; }
+  .grid { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid #2d2640; }
+  .grid figure { margin: 0; border-right: 1px solid #2d2640; border-bottom: 1px solid #2d2640; }
+  .grid .fx-art { aspect-ratio: 1; display: grid; place-items: center; font: 700 clamp(28px, 5vw, 64px) var(--fx-mono); color: rgba(255,255,255,.9);
+    background: linear-gradient(160deg, hsl(calc(var(--h) * 1deg) 70% 55%), hsl(calc((var(--h) + 40) * 1deg) 60% 22%)); }
+  .grid figcaption { padding: 14px 16px; font: 13px var(--fx-mono); color: var(--fx-muted); }
+  @media (max-width: 900px) { .grid { grid-template-columns: repeat(2, 1fr); } }
   @media (max-width: 760px) { .hero { grid-template-columns: 1fr; } .hero-stage { height: 420px; } }
 </style>
 </head>
@@ -61,16 +69,31 @@
   </div>
 </div>
 
+<section class="feat">
+  <h2 class="fx-head">featured-solutions/</h2>
+  <div class="grid">
+    <figure><div class="fx-art" style="--h:268"><b>&gt;_</b></div><figcaption>Load Test Kit, Copilot Studio</figcaption></figure>
+    <figure><div class="fx-art" style="--h:330"><b>{ }</b></div><figcaption>Flow Library, Power Automate</figcaption></figure>
+    <figure><div class="fx-art" style="--h:200"><b>&lt;/&gt;</b></div><figcaption>Canvas Patterns, Power Apps</figcaption></figure>
+    <figure><div class="fx-art" style="--h:300"><b>[::]</b></div><figcaption>Schema Deploy, Dataverse</figcaption></figure>
+    <figure><div class="fx-art" style="--h:240"><b>///</b></div><figcaption>Doc Site Recipe, GitHub Pages</figcaption></figure>
+    <figure><div class="fx-art" style="--h:290"><b>::</b></div><figcaption>Agent Inventory, Governance</figcaption></figure>
+    <figure><div class="fx-art" style="--h:215"><b>=&gt;</b></div><figcaption>HoK Coach, Sales Tools</figcaption></figure>
+    <figure><div class="fx-art" style="--h:320"><b>~~~</b></div><figcaption>Octopus Kit, Community</figcaption></figure>
+  </div>
+</section>
+
 <section class="more">
   <h2>Section content</h2>
   <p>The trail renders over empty space only, so text stays easy to select. Add <code>data-fx-no-trail</code> to any element to suppress it there.</p>
 </section>
 
-<script src="fx.js?v=9"></script>
-<script src="game.js?v=9"></script>
+<script src="fx.js?v=10"></script>
+<script src="game.js?v=10"></script>
 <script>
   UniverseFX.cursorTrail();
   UniverseFX.unscramble("[data-unscramble]");
+  UniverseFX.reveal(".grid figure, .fx-head");
   UniverseFX.typewriter(document.getElementById("typed"), "play_octopus_while_you_wait/");
   UniverseFX.mascot(document.getElementById("peek"), { accent: "#ae85ff", type: "octopus" });
 
