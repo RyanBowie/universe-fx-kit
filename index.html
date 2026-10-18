@@ -16,7 +16,10 @@
   h1 { font: 700 clamp(40px, 7vw, 84px)/1 system-ui; margin: 0 0 16px; letter-spacing: -0.03em; }
   p.mono { font-family: var(--fx-mono); color: var(--fx-muted); }
   section { padding: 48px 32px; max-width: 900px; }
-  @media (max-width: 760px) { .hero { grid-template-columns: 1fr; } .hero > div:last-child { height: 320px; } }
+  .picker { display: flex; gap: 8px; justify-content: center; padding: 8px 0 0; }
+  .picker button { font: 13px var(--fx-mono); color: var(--fx-text); background: #1d1830; border: 1px solid #2d2640; border-radius: 6px; padding: 6px 14px; cursor: pointer; }
+  .picker button:hover, .picker button[aria-pressed="true"] { border-color: var(--fx-accent); color: var(--fx-accent); }
+  @media (max-width: 760px) { .hero { grid-template-columns: 1fr; } .hero > div:last-child { height: 380px; } }
 </style>
 </head>
 <body>
@@ -32,17 +35,27 @@
     <h1>Move your mouse.</h1>
     <p>Coloured glyphs snap to a 20px grid behind your cursor, nav labels decode when you leave them, and the cat follows you around.</p>
   </div>
-  <div><canvas class="fx-mascot" id="cat" data-fx-no-trail></canvas></div>
+  <div style="display:flex;flex-direction:column;height:100%">
+    <canvas class="fx-mascot" id="cat" data-fx-no-trail style="flex:1;min-height:0"></canvas>
+    <div class="picker" role="group" aria-label="Choose mascot">
+      <button data-m="robot">robot</button><button data-m="octopus">octopus</button><button data-m="ghost">ghost</button><button data-m="cat">cat</button>
+    </div>
+  </div>
 </div>
 <section>
   <h2>Section content</h2>
   <p>The trail renders everywhere on the page. Add <code>data-fx-no-trail</code> to any element (like the canvas) to suppress it there.</p>
 </section>
-<script src="fx.js?v=4"></script>
+<script src="fx.js?v=5"></script>
 <script>
   UniverseFX.cursorTrail();
   UniverseFX.unscramble("[data-unscramble]");
-  UniverseFX.mascot(document.getElementById("cat"), { accent: "#ae85ff" });
+  var start = new URLSearchParams(location.search).get("mascot") || "robot";
+  var m = UniverseFX.mascot(document.getElementById("cat"), { accent: "#ae85ff", type: start });
+  var btns = document.querySelectorAll(".picker button");
+  function pick(n) { m.setType(n); btns.forEach(function (b) { b.setAttribute("aria-pressed", b.dataset.m === n); }); }
+  btns.forEach(function (b) { b.addEventListener("click", function () { pick(b.dataset.m); }); });
+  pick(start);
 </script>
 </body>
 </html>
