@@ -34,6 +34,13 @@
 
 .fx-mascot { display: block; width: 100%; height: 100%; }
 
+.fx-caret {
+  display: inline-block; width: 0.55em; height: 0.55em; margin-left: 1ch;
+  background: #5fed83; vertical-align: baseline; animation: fx-blink 1s steps(1) infinite;
+}
+@keyframes fx-blink { 50% { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .fx-caret { animation: none; } }
+
 @media (prefers-reduced-motion: reduce) {
   .fx-trail-block { display: none; }
 }

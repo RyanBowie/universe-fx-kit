@@ -4,22 +4,37 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>universe-fx demo</title>
-<link rel="stylesheet" href="fx.css?v=3">
+<link rel="stylesheet" href="fx.css?v=6">
 <style>
   * { box-sizing: border-box; }
   body { margin: 0; background: var(--fx-bg); color: var(--fx-text); font: 16px/1.6 system-ui, sans-serif; }
   nav { display: flex; gap: 28px; padding: 18px 32px; border-bottom: 1px solid #2d2640; font: 14px var(--fx-mono); }
   nav a { color: var(--fx-text); text-decoration: none; }
   nav a:hover { color: var(--fx-accent); }
-  .hero { display: grid; grid-template-columns: 1fr 1fr; min-height: 70vh; border-bottom: 1px solid #2d2640; }
-  .hero > div { padding: 48px 32px; }
+  .hero { padding: 40px 32px 24px; }
+  .hero h1 { margin: 0; }
   h1 { font: 700 clamp(40px, 7vw, 84px)/1 system-ui; margin: 0 0 16px; letter-spacing: -0.03em; }
   p.mono { font-family: var(--fx-mono); color: var(--fx-muted); }
   section { padding: 48px 32px; max-width: 900px; }
-  .picker { display: flex; gap: 8px; justify-content: center; padding: 8px 0 0; }
-  .picker button { font: 13px var(--fx-mono); color: var(--fx-text); background: #1d1830; border: 1px solid #2d2640; border-radius: 6px; padding: 6px 14px; cursor: pointer; }
-  .picker button:hover, .picker button[aria-pressed="true"] { border-color: var(--fx-accent); color: var(--fx-accent); }
-  @media (max-width: 760px) { .hero { grid-template-columns: 1fr; } .hero > div:last-child { height: 380px; } }
+
+  .stage-wrap { border-top: 1px solid #2d2640; border-bottom: 1px solid #2d2640; }
+  .stage { position: relative; aspect-ratio: 960 / 420; overflow: hidden; background-color: #181422;
+    background-image: linear-gradient(#251f36 1px, transparent 1px), linear-gradient(90deg, #251f36 1px, transparent 1px);
+    background-size: 20px 20px; }
+  .stage::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(90deg, rgba(24,20,34,0) 0%, rgba(24,20,34,0) 55%, rgba(24,20,34,0.55) 100%); }
+  .stage.playing::after { display: none; }
+  #peek { position: absolute; right: 5%; bottom: 0; width: min(34%, 300px); aspect-ratio: 300 / 230; z-index: 1; }
+  #game { position: absolute; inset: 0; width: 100%; height: 100%; display: none; image-rendering: pixelated; z-index: 2; }
+  .stage.playing #game { display: block; }
+  .stage.playing #peek { display: none; }
+  .touch { position: absolute; left: 0; right: 0; bottom: 8px; display: none; justify-content: space-between; padding: 0 12px; z-index: 3; }
+  .touch button { width: 56px; height: 56px; font-size: 22px; }
+  @media (pointer: coarse) { .stage.playing .touch { display: flex; } }
+  .bar { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 18px 32px; }
+  .typed { font: 15px var(--fx-mono); color: var(--fx-text); min-height: 1.6em; }
+  .btn { font: 15px system-ui; color: var(--fx-text); background: #241d38; border: 1px solid #3a3057; border-radius: 6px; padding: 10px 22px; cursor: pointer; }
+  .btn:hover { border-color: var(--fx-accent); color: var(--fx-accent); }
+  .touch .btn { padding: 0; }
 </style>
 </head>
 <body>
@@ -30,32 +45,45 @@
   <a href="#"><span data-unscramble>about/</span></a>
 </nav>
 <div class="hero">
-  <div>
-    <p class="mono">community project / built with GitHub Copilot</p>
-    <h1>Move your mouse.</h1>
-    <p>Coloured glyphs snap to a 20px grid behind your cursor, nav labels decode when you leave them, and the cat follows you around.</p>
-  </div>
-  <div style="display:flex;flex-direction:column;height:100%">
-    <canvas class="fx-mascot" id="cat" data-fx-no-trail style="flex:1;min-height:0"></canvas>
-    <div class="picker" role="group" aria-label="Choose mascot">
-      <button data-m="robot">robot</button><button data-m="octopus">octopus</button><button data-m="ghost">ghost</button><button data-m="cat">cat</button>
+  <p class="mono">community project / built with GitHub Copilot</p>
+  <h1>stay-curious/</h1>
+</div>
+<div class="stage-wrap">
+  <div class="stage" id="stage" data-fx-no-trail>
+    <canvas id="peek" aria-label="Friendly octopus peeking in" data-fx-no-trail></canvas>
+    <canvas id="game" aria-label="Octopus platformer game"></canvas>
+    <div class="touch" aria-hidden="true">
+      <div><button class="btn" data-ctl="left">&#9664;</button> <button class="btn" data-ctl="right">&#9654;</button></div>
+      <button class="btn" data-ctl="jump">&#9650;</button>
     </div>
+  </div>
+  <div class="bar">
+    <div class="typed" id="typed"></div>
+    <button class="btn" id="play">Play</button>
   </div>
 </div>
 <section>
   <h2>Section content</h2>
-  <p>The trail renders everywhere on the page. Add <code>data-fx-no-trail</code> to any element (like the canvas) to suppress it there.</p>
+  <p>The trail renders over empty space only, so text stays easy to select. Add <code>data-fx-no-trail</code> to any element to suppress it there.</p>
 </section>
-<script src="fx.js?v=5"></script>
+<script src="fx.js?v=6"></script>
+<script src="game.js?v=6"></script>
 <script>
   UniverseFX.cursorTrail();
   UniverseFX.unscramble("[data-unscramble]");
-  var start = new URLSearchParams(location.search).get("mascot") || "robot";
-  var m = UniverseFX.mascot(document.getElementById("cat"), { accent: "#ae85ff", type: start });
-  var btns = document.querySelectorAll(".picker button");
-  function pick(n) { m.setType(n); btns.forEach(function (b) { b.setAttribute("aria-pressed", b.dataset.m === n); }); }
-  btns.forEach(function (b) { b.addEventListener("click", function () { pick(b.dataset.m); }); });
-  pick(start);
+  UniverseFX.typewriter(document.getElementById("typed"), "play_octopus_while_you_wait/");
+  UniverseFX.mascot(document.getElementById("peek"), { accent: "#ae85ff", type: "octopus", peek: true, grid: false });
+
+  var stage = document.getElementById("stage"), play = document.getElementById("play");
+  var g = UniverseFX.game({
+    canvas: document.getElementById("game"),
+    touch: stage.querySelector(".touch"),
+    onExit: function () { stage.classList.remove("playing"); play.textContent = "Play"; }
+  });
+  play.addEventListener("click", function () {
+    if (stage.classList.contains("playing")) { g.stop(); stage.classList.remove("playing"); play.textContent = "Play"; }
+    else { stage.classList.add("playing"); play.textContent = "Exit game"; play.blur(); g.start(); }
+  });
 </script>
 </body>
 </html>

@@ -382,10 +382,11 @@
       cur.x += (target.x - cur.x) * 0.08; cur.y += (target.y - cur.y) * 0.08;
       ctx.clearRect(0, 0, W, H);
       var cx = W / 2, cy = H / 2, u = Math.min(W, H) / 12.5;
+      if (opts.peek) { u = Math.min(H / 5.4, W / 6.4); cy = H - u * 1.1; }
 
       // dot grid: a sine ripple radiates from the head
       var step = 20;
-      for (var gx = step / 2; gx < W; gx += step) for (var gy = step / 2; gy < H; gy += step) {
+      if (opts.grid !== false) for (var gx = step / 2; gx < W; gx += step) for (var gy = step / 2; gy < H; gy += step) {
         var dx = gx - (cx + cur.x * u * 2), dy = gy - (cy + cur.y * u * 2);
         var d = Math.sqrt(dx * dx + dy * dy);
         var wave = 0.5 + 0.5 * Math.sin(d / 18 - t * 2.2);
@@ -407,5 +408,20 @@
     return { setType: function (n) { if (TYPES[n]) type = n; } };
   }
 
-  global.UniverseFX = { cursorTrail: cursorTrail, unscramble: unscramble, mascot: mascot };
+  /* 4. Typewriter with a blinking square caret, like a terminal prompt being typed. */
+  function typewriter(el, text, o) {
+    o = o || {};
+    var speed = o.speed || 60;
+    el.textContent = "";
+    var span = document.createElement("span"), caret = document.createElement("span");
+    caret.className = "fx-caret"; caret.setAttribute("aria-hidden", "true");
+    el.setAttribute("aria-label", text);
+    el.append(span, caret);
+    if (reduce) { span.textContent = text; return; }
+    var i = 0;
+    function tick() { span.textContent = text.slice(0, ++i); if (i < text.length) setTimeout(tick, speed + Math.random() * 40); }
+    new IntersectionObserver(function (e, obs) { if (e[0].isIntersecting) { obs.disconnect(); setTimeout(tick, o.delay || 300); } }).observe(el);
+  }
+
+  global.UniverseFX = { cursorTrail: cursorTrail, unscramble: unscramble, mascot: mascot, typewriter: typewriter };
 })(window);
