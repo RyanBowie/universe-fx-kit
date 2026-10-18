@@ -153,7 +153,7 @@
       var dir = s.v < 0 ? 1 : -1; // art faces left; flip for right-moving
       var wag = Math.sin(t * 8 + s.ph) * 6 * s.s;
       ctx.save();
-      ctx.translate(s.x, s.y); ctx.scale(-dir * s.s, s.s);
+      ctx.translate(s.x, s.y); ctx.scale(dir * s.s, s.s);
       ctx.fillStyle = "#4a5b78";
       ctx.beginPath(); ctx.moveTo(48, 0); ctx.lineTo(82, -24 + wag); ctx.lineTo(72, 0); ctx.lineTo(82, 24 + wag); ctx.closePath(); ctx.fill();
       ctx.beginPath(); ctx.moveTo(-6, -17); ctx.lineTo(18, -42); ctx.lineTo(24, -16); ctx.closePath(); ctx.fill();
