@@ -9,7 +9,7 @@
   var reduce = global.matchMedia && global.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   // Suppress the trail over anything you might select or click, so copy/paste stays easy.
-  var SKIP = "a,button,input,textarea,select,label,pre,code,[data-fx-no-trail]";
+  var SKIP = "nav,header,a,button,input,textarea,select,label,pre,code,[data-fx-no-trail]";
   function overText(el) {
     if (!el || !el.closest) return false;
     if (el.closest(SKIP)) return true;
