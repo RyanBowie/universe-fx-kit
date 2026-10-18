@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>universe-fx demo</title>
+<link rel="stylesheet" href="fx.css">
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--fx-bg); color: var(--fx-text); font: 16px/1.6 system-ui, sans-serif; }
+  nav { display: flex; gap: 28px; padding: 18px 32px; border-bottom: 1px solid #2d2640; font: 14px var(--fx-mono); }
+  nav a { color: var(--fx-text); text-decoration: none; }
+  nav a:hover { color: var(--fx-accent); }
+  .hero { display: grid; grid-template-columns: 1fr 1fr; min-height: 70vh; border-bottom: 1px solid #2d2640; }
+  .hero > div { padding: 48px 32px; }
+  h1 { font: 700 clamp(40px, 7vw, 84px)/1 system-ui; margin: 0 0 16px; letter-spacing: -0.03em; }
+  p.mono { font-family: var(--fx-mono); color: var(--fx-muted); }
+  section { padding: 48px 32px; max-width: 900px; }
+  @media (max-width: 760px) { .hero { grid-template-columns: 1fr; } .hero > div:last-child { height: 320px; } }
+</style>
+</head>
+<body>
+<nav>
+  <a href="#"><span data-unscramble>sessions/</span></a>
+  <a href="#"><span data-unscramble>solutions/</span></a>
+  <a href="#"><span data-unscramble>architecture/</span></a>
+  <a href="#"><span data-unscramble>about/</span></a>
+</nav>
+<div class="hero">
+  <div>
+    <p class="mono">community project / built with GitHub Copilot</p>
+    <h1>Move your mouse.</h1>
+    <p>Coloured glyphs snap to a 20px grid behind your cursor, nav labels decode when you leave them, and the cat follows you around.</p>
+  </div>
+  <div><canvas class="fx-mascot" id="cat" data-fx-no-trail></canvas></div>
+</div>
+<section>
+  <h2>Section content</h2>
+  <p>The trail renders everywhere on the page. Add <code>data-fx-no-trail</code> to any element (like the canvas) to suppress it there.</p>
+</section>
+<script src="fx.js"></script>
+<script>
+  UniverseFX.cursorTrail();
+  UniverseFX.unscramble("[data-unscramble]");
+  UniverseFX.mascot(document.getElementById("cat"), { accent: "#ae85ff" });
+</script>
+</body>
+</html>
