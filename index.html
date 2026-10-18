@@ -4,12 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>universe-fx demo</title>
-<link rel="stylesheet" href="fx.css?v=10">
+<link rel="stylesheet" href="fx.css?v=11">
+<link rel="stylesheet" href="fx-scroll.css?v=11">
 <style>
   * { box-sizing: border-box; }
   html { scroll-behavior: smooth; }
   body { margin: 0; background: var(--fx-bg); color: var(--fx-text); font: 16px/1.6 system-ui, sans-serif; }
   nav { display: flex; gap: 28px; padding: 18px 32px; border-bottom: 1px solid #2d2640; font: 14px var(--fx-mono); }
+  nav.fx-nav { background: rgba(20, 16, 30, .78); }
   nav a { color: var(--fx-text); text-decoration: none; }
   nav a:hover { color: var(--fx-accent); }
   .hero { display: grid; grid-template-columns: 1fr 1fr; min-height: 78vh; border-bottom: 1px solid #2d2640; }
@@ -40,7 +42,8 @@
 </style>
 </head>
 <body>
-<nav>
+<div class="fx-progress" id="progress" aria-hidden="true"></div>
+<nav class="fx-nav" id="nav">
   <a href="#"><span data-unscramble>sessions/</span></a>
   <a href="#"><span data-unscramble>solutions/</span></a>
   <a href="#"><span data-unscramble>architecture/</span></a>
@@ -69,9 +72,33 @@
   </div>
 </div>
 
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-row"><span>no-dependencies</span><i>/</i><span>pure-html-css-js</span><i>+</i><span>free-on-github-pages</span><i>*</i><span>no-dependencies</span><i>/</i><span>pure-html-css-js</span><i>+</i><span>free-on-github-pages</span><i>*</i></div>
+  <div class="marquee-row rev"><span>scroll-driven</span><i>=</i><span>canvas-games</span><i>&amp;</i><span>live-github-data</span><i>)</i><span>scroll-driven</span><i>=</i><span>canvas-games</span><i>&amp;</i><span>live-github-data</span><i>)</i></div>
+</div>
+
+<section class="manifesto">
+  <span class="glyph-float" data-speed="-0.25" style="left:4%;top:12%" aria-hidden="true">&gt;_</span>
+  <span class="glyph-float" data-speed="0.3" style="right:6%;top:40%" aria-hidden="true">{ }</span>
+  <span class="glyph-float" data-speed="-0.15" style="left:40%;bottom:6%" aria-hidden="true">//</span>
+  <p class="scrub" id="scrub">GitHub Pages can host far more than documentation. Scroll-driven stories, canvas games, generative art and live dashboards. All static files, all free, all yours.</p>
+</section>
+
+<section class="bento-sec">
+  <h2 class="fx-head">what-pages-can-do/</h2>
+  <div class="bento">
+    <div class="bcell big"><div class="card spot"><span class="tag">cursor-aware/</span><div class="big-glyph cycle" aria-hidden="true"></div><div><h3>It reacts to you</h3><p>Glyph trails, magnetic buttons, tilting cards and an octopus that watches your cursor. Hover any card here.</p></div></div></div>
+    <div class="bcell"><div class="card spot"><span class="tag">effects/</span><div class="num" data-count="16" data-suffix="+">0</div><p>interactive effects in this one page</p></div></div>
+    <div class="bcell"><div class="card spot"><span class="tag">dependencies/</span><div class="num" data-count="0">0</div><p>libraries, build steps or servers</p></div></div>
+    <div class="bcell wide"><div class="card spot"><span class="tag">live-data/</span><div class="num" id="repoCount" data-count="0">0</div><p>public repos, fetched live from the GitHub API when this page loaded</p></div></div>
+    <div class="bcell wide"><div class="card spot"><span class="tag">scroll-scrubbed/</span><div><h3>Pinned horizontal stories</h3><p>Vertical scroll drives a horizontal timeline further down this page.</p></div></div></div>
+    <div class="bcell wide"><div class="card spot"><span class="tag">playable/</span><div><h3>Games in a canvas</h3><p>Shark Dodge is about 300 lines of vanilla JS. No engine needed.</p></div></div></div>
+  </div>
+</section>
+
 <section class="feat">
   <h2 class="fx-head">featured-solutions/</h2>
-  <div class="grid">
+  <div class="grid" id="repos">
     <figure><div class="fx-art" style="--h:268"><b>&gt;_</b></div><figcaption>Load Test Kit, Copilot Studio</figcaption></figure>
     <figure><div class="fx-art" style="--h:330"><b>{ }</b></div><figcaption>Flow Library, Power Automate</figcaption></figure>
     <figure><div class="fx-art" style="--h:200"><b>&lt;/&gt;</b></div><figcaption>Canvas Patterns, Power Apps</figcaption></figure>
@@ -83,17 +110,72 @@
   </div>
 </section>
 
-<section class="more">
-  <h2>Section content</h2>
-  <p>The trail renders over empty space only, so text stays easy to select. Add <code>data-fx-no-trail</code> to any element to suppress it there.</p>
+<section class="hs" id="hs">
+  <div class="hs-stick">
+    <h2 class="hs-title">how-this-was-built/</h2>
+    <div class="hs-track">
+      <article class="hs-card" style="--h:268"><span class="n">01</span><div><h3>Reverse-engineer</h3><p>Study how the Universe site does its cursor trail, text decode and mascot, then write original versions.</p></div></article>
+      <article class="hs-card" style="--h:330"><span class="n">02</span><div><h3>Ship a test repo</h3><p>A public repo with GitHub Pages enabled, so every change is reviewable at a real URL.</p></div></article>
+      <article class="hs-card" style="--h:200"><span class="n">03</span><div><h3>Pick a mascot</h3><p>Cat, robot, ghost, octopus. The octopus won, and it follows your cursor.</p></div></article>
+      <article class="hs-card" style="--h:150"><span class="n">04</span><div><h3>Add a game</h3><p>Dodge the sharks, grab pearls, keep your hearts. All drawn on a canvas.</p></div></article>
+      <article class="hs-card" style="--h:300"><span class="n">05</span><div><h3>Make it scroll</h3><p>Reveals, word scrubbing, parallax, counters and this very pinned timeline.</p></div></article>
+      <article class="hs-card" style="--h:20"><span class="n">06</span><div><h3>Roll it out</h3><p>Drop the kit into your real repo pages, one script and one stylesheet each.</p></div></article>
+    </div>
+    <div class="hs-bar" aria-hidden="true"><i></i></div>
+  </div>
 </section>
 
-<script src="fx.js?v=10"></script>
-<script src="game.js?v=10"></script>
+<section class="cta" data-fx-no-trail>
+  <canvas id="field" aria-hidden="true"></canvas>
+  <div class="cta-inner">
+    <h2>build-something-cool/</h2>
+    <div class="row">
+      <a class="btn primary mag" href="https://github.com/RyanBowie/universe-fx-kit">View the repo</a>
+      <a class="btn mag" href="#">Back to top</a>
+    </div>
+    <p class="mono">move your cursor over the dots, click for ripples</p>
+  </div>
+</section>
+<div class="foot">community project built with GitHub Copilot &middot; not a Microsoft or GitHub product &middot; MIT licence</div>
+
+<script src="fx.js?v=11"></script>
+<script src="fx-scroll.js?v=11"></script>
+<script src="game.js?v=11"></script>
 <script>
   UniverseFX.cursorTrail();
   UniverseFX.unscramble("[data-unscramble]");
-  UniverseFX.reveal(".grid figure, .fx-head");
+  UniverseFX.reveal(".fx-head");
+  UniverseFX.progress(document.getElementById("progress"));
+  UniverseFX.autoHideNav(document.getElementById("nav"));
+  UniverseFX.wordScrub(document.getElementById("scrub"));
+  UniverseFX.parallax(".glyph-float");
+  UniverseFX.reveal(".bcell", { stagger: 110 });
+  UniverseFX.spotlight(".spot");
+  UniverseFX.counters("[data-count]");
+  UniverseFX.hscroll(document.getElementById("hs"));
+  UniverseFX.dotField(document.getElementById("field"));
+  UniverseFX.magnetic(".mag");
+
+  // Live data: replace the placeholder tiles with the owner's public repos (falls back silently if the API is unavailable).
+  var GLYPHS = ["&gt;_", "{ }", "&lt;/&gt;", "[::]", "///", "::", "=&gt;", "~~~"];
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  function hash(s) { var h = 0; for (var i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0; return h; }
+  fetch("https://api.github.com/users/RyanBowie/repos?per_page=100&sort=updated")
+    .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+    .then(function (all) {
+      var repos = all.filter(function (r) { return !r.fork; });
+      var cnt = document.getElementById("repoCount");
+      cnt.setAttribute("data-count", repos.length);
+      var rect = cnt.getBoundingClientRect();
+      if (rect.top < innerHeight && rect.bottom > 0) UniverseFX.countTo(cnt, repos.length);
+      document.getElementById("repos").innerHTML = repos.slice(0, 8).map(function (r) {
+        var h = hash(r.name);
+        return '<figure><a href="' + esc(r.html_url) + '" style="color:inherit;text-decoration:none"><div class="fx-art" style="--h:' + (h % 360) + '"><b>' + GLYPHS[h % GLYPHS.length] + '</b></div><figcaption>' +
+          esc(r.name) + (r.description ? " / " + esc(r.description.slice(0, 60)) : "") + '</figcaption></a></figure>';
+      }).join("");
+    })
+    .catch(function () {})
+    .then(function () { UniverseFX.reveal("#repos figure"); });
   UniverseFX.typewriter(document.getElementById("typed"), "play_octopus_while_you_wait/");
   UniverseFX.mascot(document.getElementById("peek"), { accent: "#ae85ff", type: "octopus" });
 

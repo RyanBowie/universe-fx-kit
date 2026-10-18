@@ -1,0 +1,80 @@
+/* universe-fx scroll & section effects: styles. Pairs with fx-scroll.js. */
+.fx-progress { position: fixed; top: 0; left: 0; right: 0; height: 3px; z-index: 100; transform-origin: 0 50%; transform: scaleX(0);
+  background: linear-gradient(90deg, #ae85ff, #f73678, #5fed83); pointer-events: none; }
+
+.fx-nav { position: sticky; top: 0; z-index: 60; background: rgba(20, 16, 30, .78); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); transition: transform .45s cubic-bezier(.2,.8,.2,1); }
+.fx-nav.fx-nav-hide { transform: translateY(-100%); }
+
+/* Infinite marquee */
+.marquee { overflow: hidden; border-top: 1px solid #2d2640; border-bottom: 1px solid #2d2640; padding: 18px 0; display: flex; flex-direction: column; gap: 10px; }
+.marquee-row { display: flex; width: max-content; animation: fx-marq 38s linear infinite; font: 700 clamp(28px, 5vw, 56px)/1.1 var(--fx-mono); letter-spacing: -0.02em; white-space: nowrap; }
+.marquee-row.rev { animation-direction: reverse; animation-duration: 46s; color: transparent; -webkit-text-stroke: 1px #6a5a99; }
+.marquee-row span { padding-right: 1.2ch; }
+.marquee-row i { color: #ae85ff; font-style: normal; padding-right: 1.2ch; }
+@keyframes fx-marq { to { transform: translateX(-50%); } }
+
+/* Word scrub manifesto */
+.manifesto { position: relative; padding: 140px 32px; overflow: hidden; }
+.manifesto .scrub { position: relative; z-index: 1; max-width: 1000px; margin: 0 auto; font: 700 clamp(30px, 5.2vw, 64px)/1.12 system-ui; letter-spacing: -0.03em; }
+.fx-word { opacity: .16; transition: opacity .35s ease, color .35s ease; }
+.fx-word.on { opacity: 1; }
+.fx-word.on:nth-child(7n+3) { color: #ae85ff; }
+.glyph-float { position: absolute; font: 700 clamp(60px, 12vw, 180px) var(--fx-mono); color: rgba(174,133,255,.1); pointer-events: none; user-select: none; will-change: transform; }
+
+/* Bento grid with spotlight + tilt */
+.bento-sec { padding: 40px 32px 100px; max-width: 1180px; margin: 0 auto; }
+.bento-sec > h2 { font: 700 clamp(36px, 6vw, 72px)/1 system-ui; letter-spacing: -0.03em; margin: 0 0 32px; }
+.bento { display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: 200px; gap: 16px; }
+.bcell { min-height: 0; }
+.bcell.big { grid-column: span 2; grid-row: span 2; }
+.bcell.wide { grid-column: span 2; }
+.card { position: relative; height: 100%; overflow: hidden; padding: 24px; border: 1px solid #2d2640; border-radius: 14px; background: #181422;
+  display: flex; flex-direction: column; justify-content: space-between; transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); transition: transform .25s ease, border-color .3s ease; }
+.card:hover { border-color: #6a5a99; }
+.card::before { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0; transition: opacity .3s;
+  background: radial-gradient(300px circle at var(--mx, 50%) var(--my, 50%), rgba(174,133,255,.22), transparent 65%); }
+.card:hover::before { opacity: 1; }
+.card h3 { margin: 0; font: 700 22px/1.2 system-ui; letter-spacing: -0.01em; }
+.card p { margin: 8px 0 0; color: var(--fx-muted); font-size: 14px; }
+.card .tag { font: 12px var(--fx-mono); color: #ae85ff; }
+.card .num { font: 700 clamp(44px, 6vw, 76px)/1 system-ui; letter-spacing: -0.04em; background: linear-gradient(135deg, #fff, #ae85ff); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.card .big-glyph { font: 700 clamp(80px, 12vw, 180px)/1 var(--fx-mono); color: #ae85ff; }
+.cycle::after { content: "/"; animation: fx-cyc 3s steps(1) infinite; }
+@keyframes fx-cyc { 0% { content: "/"; color: #ae85ff; } 16% { content: ")"; color: #f73678; } 33% { content: "+"; color: #5fed83; } 50% { content: "="; color: #bba00a; } 66% { content: "*"; color: #583af7; } 83% { content: "&"; color: #c05200; } }
+
+/* Pinned horizontal scroll */
+.hs { position: relative; border-top: 1px solid #2d2640; }
+.hs-stick { position: sticky; top: 0; height: 100vh; overflow: hidden; display: flex; flex-direction: column; justify-content: center; gap: 28px; }
+.hs-title { font: 700 clamp(36px, 6vw, 72px)/1 system-ui; letter-spacing: -0.03em; margin: 0; padding: 0 32px; }
+.hs-track { display: flex; gap: 20px; padding: 0 32px; width: max-content; will-change: transform; }
+.hs-card { flex: 0 0 min(80vw, 480px); height: min(52vh, 400px); padding: 28px; border-radius: 16px; border: 1px solid #2d2640; position: relative; overflow: hidden;
+  display: flex; flex-direction: column; justify-content: space-between; background: linear-gradient(160deg, hsl(var(--h) 55% 20%), #14101e 70%); }
+.hs-card .n { font: 700 clamp(70px, 11vw, 140px)/1 var(--fx-mono); color: rgba(255,255,255,.12); }
+.hs-card h3 { margin: 0 0 6px; font: 700 26px/1.15 system-ui; }
+.hs-card p { margin: 0; color: #c8c0dc; font-size: 15px; }
+.hs-bar { height: 3px; background: #2d2640; margin: 0 32px; border-radius: 2px; overflow: hidden; }
+.hs-bar i { display: block; height: 100%; background: #ae85ff; transform-origin: 0 50%; transform: scaleX(var(--p, 0)); }
+
+/* Footer CTA */
+.cta { position: relative; min-height: 80vh; display: grid; place-items: center; text-align: center; overflow: hidden; border-top: 1px solid #2d2640; }
+.cta canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.cta-inner { position: relative; pointer-events: none; padding: 32px; }
+.cta-inner h2 { font: 700 clamp(40px, 8vw, 110px)/1 system-ui; letter-spacing: -0.04em; margin: 0 0 28px; }
+.cta-inner .row { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; pointer-events: auto; }
+.mag { display: inline-block; transition: transform .2s cubic-bezier(.2,.8,.2,1); }
+.btn.primary { background: #ae85ff; color: #14101e; border-color: #ae85ff; font-weight: 600; }
+.btn.primary:hover { background: #c4a8ff; color: #14101e; }
+.foot { padding: 22px 32px; border-top: 1px solid #2d2640; font: 12px var(--fx-mono); color: var(--fx-muted); text-align: center; }
+
+@media (max-width: 900px) {
+  .bento { grid-template-columns: repeat(2, 1fr); }
+  .bcell.big { grid-column: span 2; grid-row: span 1; }
+}
+@media (max-width: 560px) { .bento { grid-template-columns: 1fr; } .bcell.big, .bcell.wide { grid-column: auto; } }
+@media (prefers-reduced-motion: reduce) {
+  .marquee-row, .cycle::after { animation: none; }
+  .fx-word { opacity: 1; transition: none; }
+  .hs-stick { position: static; height: auto; padding: 48px 0; }
+  .hs-track { overflow-x: auto; width: auto; }
+  .card { transition: none; transform: none; }
+}
