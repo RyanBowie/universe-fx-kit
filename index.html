@@ -10,10 +10,14 @@
   * { box-sizing: border-box; }
   html { scroll-behavior: smooth; }
   body { margin: 0; background: var(--fx-bg); color: var(--fx-text); font: 16px/1.6 system-ui, sans-serif; }
-  nav { display: flex; gap: 28px; padding: 18px 32px; border-bottom: 1px solid #2d2640; font: 14px var(--fx-mono); }
+  nav { display: flex; flex-wrap: wrap; gap: 12px 28px; padding: 18px 32px; border-bottom: 1px solid #2d2640; font: 14px var(--fx-mono); }
   nav.fx-nav { background: rgba(20, 16, 30, .78); }
   nav a { color: var(--fx-text); text-decoration: none; }
   nav a:hover { color: var(--fx-accent); }
+  .fx-cursor-toggle { margin-left: auto; padding: 4px 12px; border: 1px solid #5a4d80; border-radius: 999px; background: transparent; color: var(--fx-text); font: 600 12px var(--fx-mono); cursor: pointer; }
+  .fx-cursor-toggle:hover { border-color: var(--fx-accent); }
+  .fx-cursor-toggle:focus-visible { outline: 2px solid var(--fx-accent); outline-offset: 3px; }
+  .fx-cursor-off .fx-trail-block { display: none; }
   .hero { display: grid; grid-template-columns: 1fr 1fr; min-height: 78vh; border-bottom: 1px solid #2d2640; }
   .hero-text { padding: 48px 32px; }
   h1 { font: 700 clamp(40px, 7vw, 84px)/1 system-ui; margin: 0 0 16px; letter-spacing: -0.03em; }
@@ -48,6 +52,7 @@
   <a href="#"><span data-unscramble>solutions/</span></a>
   <a href="#"><span data-unscramble>architecture/</span></a>
   <a href="#"><span data-unscramble>about/</span></a>
+  <button type="button" class="fx-cursor-toggle" id="cursorToggle" aria-pressed="true">Cursor effects: on</button>
 </nav>
 <div class="hero">
   <div class="hero-text">
@@ -155,7 +160,13 @@
   UniverseFX.hscroll(document.getElementById("hs"));
   UniverseFX.dotField(document.getElementById("field"));
   UniverseFX.magnetic(".mag");
-
+  (function () {
+    var b = document.getElementById("cursorToggle"), r = document.documentElement;
+    try { if (localStorage.getItem("fx-cursor") === "off") r.classList.add("fx-cursor-off"); } catch (e) {}
+    function paint() { var on = !r.classList.contains("fx-cursor-off"); b.setAttribute("aria-pressed", String(on)); b.textContent = on ? "Cursor effects: on" : "Cursor effects: off"; }
+    b.addEventListener("click", function () { r.classList.toggle("fx-cursor-off"); try { localStorage.setItem("fx-cursor", r.classList.contains("fx-cursor-off") ? "off" : "on"); } catch (e) {} paint(); });
+    paint();
+  })();
   // Live data: replace the placeholder tiles with the owner's public repos (falls back silently if the API is unavailable).
   var GLYPHS = ["&gt;_", "{ }", "&lt;/&gt;", "[::]", "///", "::", "=&gt;", "~~~"];
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }

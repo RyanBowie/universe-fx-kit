@@ -37,7 +37,7 @@
       blocks.push(b);
     }
     function onMove(e) {
-      if (overText(e.target)) return;
+      if (overText(e.target) || document.documentElement.classList.contains("fx-cursor-off")) return;
       var x = grid * Math.floor(e.clientX / grid), y = grid * Math.floor(e.clientY / grid);
       if (x === lastX && y === lastY) return;
       lastX = x; lastY = y;
